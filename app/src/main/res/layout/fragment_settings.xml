@@ -1,5 +1,6 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -26,10 +27,10 @@
             android:text="Name : "/>
 
         <EditText
+            android:id="@+id/nameet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            />
+            android:layout_weight="1"/>
     </LinearLayout>
 
 
@@ -64,9 +65,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Soft"/>
+                android:text="Low"/>
 
             <EditText
+                android:id="@+id/softet"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -83,9 +85,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Hard"/>
+                android:text="High"/>
 
             <EditText
+                android:id="@+id/hardet"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -101,16 +104,18 @@
         android:text="Message : "/>
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/msget"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textMultiLine"
         android:lines="3"/>
 
     <Button
+        android:id="@+id/savebtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
         android:text="Save Changes"/>
+
 </LinearLayout>

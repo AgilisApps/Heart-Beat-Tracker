@@ -4,15 +4,21 @@ package com.example.anandundavia.heatbeattracker;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
+import android.provider.*;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.system.Os;
 import android.util.Log;
@@ -29,13 +35,18 @@ public class FirstTime extends Fragment
     private static final int PICK_EM1 = 1;
     private static final int PICK_EM2 = 2;
     private static final int PICK_DOC = 3;
+    private static final int BLUETOOTH_REQUEST_CODE = 112;
+
+    private static final int BLUETOOTH_CONNECT_CODE = 1101;
+    private BluetoothAdapter bluetoothAdapter;
     final private int REQUEST_CODE_ASK_PERMISSIONS_CONTACTS = 110;
     private static int x_global=1;
 
 
+
     private View rootView;
 
-    private Button em1Btn, em2Btn, docBtn, submitBtn;
+    private Button em1Btn, em2Btn, docBtn, pairDeviceBtn, submitBtn;
     private boolean em1Selected = false, em2Selected = false, docSelected = false;
     private String em1Name, em2Name, docName, em1ContactNumber, em2ContactNumber, docContactNumber;
 
@@ -54,6 +65,7 @@ public class FirstTime extends Fragment
         em1Btn = (Button) rootView.findViewById(R.id.em1Btn);
         em2Btn = (Button) rootView.findViewById(R.id.em2Btn);
         docBtn = (Button) rootView.findViewById(R.id.docBtn);
+        pairDeviceBtn = (Button) rootView.findViewById(R.id.pair_device_btn);
         submitBtn = (Button) rootView.findViewById(R.id.submitBtn);
 
         nameET = (EditText) rootView.findViewById(R.id.nameET);
@@ -61,7 +73,9 @@ public class FirstTime extends Fragment
         em1Btn.setOnClickListener(new MyContactPicker(PICK_EM1));
         em2Btn.setOnClickListener(new MyContactPicker(PICK_EM2));
         docBtn.setOnClickListener(new MyContactPicker(PICK_DOC));
+        pairDeviceBtn.setOnClickListener(new PairDeviceHandler());
         submitBtn.setOnClickListener(new SubmitHandler());
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         return rootView;
     }
 
@@ -69,7 +83,7 @@ public class FirstTime extends Fragment
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK)
+        if (resultCode == Activity.RESULT_OK && requestCode!=BLUETOOTH_REQUEST_CODE)
         {
             Uri contactData = data.getData();
             Cursor c = getContext().getContentResolver().query(contactData, null, null, null, null);
@@ -102,8 +116,58 @@ public class FirstTime extends Fragment
                 }
             }
         }
+        else if(resultCode==Activity.RESULT_OK && requestCode==BLUETOOTH_REQUEST_CODE){
+            seeBluetoothDeviceList();
+        }
+        else if(requestCode==BLUETOOTH_CONNECT_CODE){
+
+            //getActivity().finish();
+
+        }
     }
 
+    class PairDeviceHandler implements View.OnClickListener{
+
+        public PairDeviceHandler(){
+
+        }
+        @Override
+        public void onClick(View view) {
+
+            if(bluetoothAdapter!=null) {
+                if (!bluetoothAdapter.isEnabled()) {
+
+                    Intent bluetoothOn = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                    startActivityForResult(bluetoothOn, BLUETOOTH_REQUEST_CODE);
+
+
+                } else {
+                    seeBluetoothDeviceList();
+                }
+            }
+            else{
+                Snackbar.make(getView(), "Bluetooth not supported on this device", Snackbar.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    public void seeBluetoothDeviceList(){
+
+
+        Intent pickBluetoothDevice = new Intent();
+        pickBluetoothDevice.setAction(android.provider.Settings.ACTION_BLUETOOTH_SETTINGS);
+        //startActivity(pickBluetoothDevice);
+        startActivityForResult(pickBluetoothDevice,BLUETOOTH_CONNECT_CODE);
+
+        /*
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+        File file = new File(data.getData().getPath());
+        sharingIntent.setType("image*//*");
+        sharingIntent.setPackage("com.android.bluetooth");
+        sharingIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+        startActivity(Intent.createChooser(sharingIntent, "Share file"));*/
+
+    }
     class MyContactPicker implements View.OnClickListener
     {
         int x;
@@ -189,6 +253,14 @@ public class FirstTime extends Fragment
             Database.LOCALDB.insertContact(em1Name, em1ContactNumber);
             Database.LOCALDB.insertContact(em2Name, em2ContactNumber);
             Database.LOCALDB.insertContact(docName, docContactNumber);
+
+
+            //new Thread(new RandomDataGen(getActivity())).start();
+//            getActivity().startService(new Intent(getActivity(), RandomGenService.class));
+            FragmentManager fm = getActivity().getSupportFragmentManager();
+            FragmentTransaction ftm = fm.beginTransaction();
+            ftm.replace(R.id.container, new HomeFragment()).commit();
+
 
         }
     }

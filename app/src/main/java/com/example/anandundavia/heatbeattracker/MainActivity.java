@@ -3,9 +3,11 @@ package com.example.anandundavia.heatbeattracker;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -24,14 +26,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Database.LOCALDB = new Database(this);
+
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ftm = fm.beginTransaction();
-        ftm.replace(R.id.container, new FirstTime()).commit();
+        Fragment fragToLoad;
+        if (!Database.LOCALDB.isUserRegistered())
+        {
+            fragToLoad = new FirstTime();
+        } else
+        {
+            fragToLoad = new HomeFragment();
+            //new Thread(new RandomDataGen(this)).start();
+        }
+        ftm.replace(R.id.container, fragToLoad).commit();
 
     }
-
-
-
 
 
     @Override
@@ -46,9 +55,18 @@ public class MainActivity extends AppCompatActivity {
     {
         if (item.getItemId() == R.id.action_settings)
         {
-            FragmentManager fm = getSupportFragmentManager();
-            FragmentTransaction ftm = fm.beginTransaction();
-            ftm.replace(R.id.container, new Settings()).commit();
+            if (Database.LOCALDB.isUserRegistered())
+            {
+                FragmentManager fm = getSupportFragmentManager();
+                FragmentTransaction ftm = fm.beginTransaction();
+                ftm.replace(R.id.container, new Settings());
+                ftm.addToBackStack(null);
+                ftm.commit();
+
+            } else
+            {
+                Toast.makeText(this, "Register First!", Toast.LENGTH_SHORT).show();
+            }
         }
 
         return super.onOptionsItemSelected(item);

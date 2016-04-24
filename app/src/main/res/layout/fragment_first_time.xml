@@ -104,6 +104,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Select a device to pair"
+                    android:id="@+id/pair_device_btn"
 
                     />
             </TableRow>

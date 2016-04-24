@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:orientation="vertical" android:layout_width="match_parent"
+android:layout_height="match_parent">
+
+<View
+    android:layout_width="match_parent"
+    android:layout_height="180dp"
+    android:background="@drawable/view_top"
+    android:id="@+id/banner_top"
+    android:layout_margin="5dp" />
+
+<TextView
+    android:layout_width="150dp"
+    android:layout_height="150dp"
+    android:textAppearance="?android:attr/textAppearanceLarge"
+    android:text="74"
+    android:textSize="100dp"
+    android:id="@+id/banner_top_textview"
+    android:textColor="@color/colorText"
+    android:layout_alignBottom="@+id/banner_top"
+    android:layout_centerHorizontal="true" />
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="180dp"
+    android:weightSum="2"
+    android:orientation="horizontal"
+    android:layout_below="@+id/banner_top_textview"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true"
+    android:id="@+id/linearLayout">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_margin="5dp"
+        android:background="@drawable/view_bottom_left">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="60"
+            android:layout_marginTop="40dp"
+            android:textColor="@color/colorText"
+            android:textSize="80dp"
+            android:id="@+id/banner_bottom_left_textview"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_margin="5dp"
+        android:background="@drawable/view_bottom_right">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="180"
+            android:layout_marginTop="40dp"
+            android:textColor="@color/colorText"
+            android:textSize="80dp"
+            android:id="@+id/banner_bottom_right_textview"/>
+    </LinearLayout>
+</LinearLayout>
+
+<Spinner
+    android:id="@+id/currentmodespin"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_below="@+id/linearLayout"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true"></Spinner>
+
+
+<Button
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/emergency_text"
+    android:layout_alignParentBottom="true"
+    android:background="@drawable/button_config"
+    android:textColor="@color/colorTextWhite"
+    android:id="@+id/emergencyButton"/>
+
+
+
+</RelativeLayout>
